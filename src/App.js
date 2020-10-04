@@ -4,11 +4,11 @@ import './App.css';
 function App() {
   //コンポーネント内で扱う状態（変数、関数）を定義
 
-  //写真の状態を管理（今なんの写真？）
+  //写真の状態を管理（写真を格納）
   const [images, setImages] = useState([])
-  //検索バーに入れる文字列を管理
+  //検索バーに入れる文字列を管理（インプットの値）
   const [text, setText] = useState("")
-  //今なんの文字列で検索した？
+  //今なんの文字列で検索した？(検索ワード)
   const [query, setQuery] = useState('apple')
 
   //useEffectを使って、マウント時に外部apiからdataを取得しimagesを変更したい
@@ -30,6 +30,8 @@ function App() {
 
     e.preventDefault() //検索による画面遷移を防ぐ(デフォルトで画面遷移するようになっているのを停止する)
     setQuery(text)
+    //setQueryでqueryの値を変更しているから,useEffectメソッドが呼ばれる
+
     //formのinputで入力時、その入力値をtextに渡しているから、 setQuery(text)で検索文字列を渡すことができる
     setText('')
   }
