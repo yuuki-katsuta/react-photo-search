@@ -2,65 +2,52 @@ import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  //コンポーネント内で扱う状態（変数、関数）を定義
-
   //写真の状態を管理（写真を格納）
-  const [images, setImages] = useState([])
-  //検索バーに入れる文字列を管理（インプットの値）
-  const [text, setText] = useState("")
-  //今なんの文字列で検索した？(検索ワード)
-  const [query, setQuery] = useState('apple')
+  const [images, setImages] = useState([]);
+  //form
+  const [text, setText] = useState('');
+  //検索文字列の値
+  const [query, setQuery] = useState('apple');
 
-  //useEffectを使って、マウント時に外部apiからdataを取得しimagesを変更したい
   useEffect(() => {
-    fetch(`https://api.unsplash.com/search/photos?query=${query}&client_id=${process.env.REACT_APP_CLIENT_ID}`)
+    fetch(
+      `https://api.unsplash.com/search/photos?query=${query}&client_id=${process.env.REACT_APP_CLIENT_ID}`
+    )
       .then((response) => {
-        //urlにアクセスして、撮ってきたデータはresponseで受け取れる
-        return response.json()
-        //response.json()でデータをjson形式にして、扱える形にした。それを次のthenへメソッドへdataとして渡した
+        return response.json();
       })
       .then((data) => {
-        setImages(data.results)
-        //resultsはコンソールでどのプロパティの中にデータが（この場合配列が）格納されているかを調べた
-      })
-  }, [query])
-  // [query]とすることで、初回のマウント時とquery(検索文字)が変更されたときのみuseEffectが走る
+        setImages(data.results);
+      });
+  }, [query]);
 
   const onSubmit = (e) => {
-
-    e.preventDefault() //検索による画面遷移を防ぐ(デフォルトで画面遷移するようになっているのを停止する)
-    setQuery(text)
-    //setQueryでqueryの値を変更しているから,useEffectメソッドが呼ばれる
-
-    //formのinputで入力時、その入力値をtextに渡しているから、 setQuery(text)で検索文字列を渡すことができる
-    setText('')
-  }
+    e.preventDefault();
+    setQuery(text);
+    setText('');
+  };
 
   return (
-    <div className="App">
-      <div className="main">
+    <div className='App'>
+      <div className='main'>
         <form onSubmit={onSubmit}>
           <input
-            type="text"
-            onChange={(e) => { setText(e.target.value) }}
+            type='text'
+            onChange={(e) => {
+              setText(e.target.value);
+            }}
             value={text}
           />
-          <button type="submit">
-            Search
-          </button>
+          <button type='submit'>Search</button>
         </form>
       </div>
       <div className='container'>
-        {
-          images.map((image) => (
-            <div key={image.id} className="card">
-              <img src={image.urls.regular} className="card-img" alt="" />
-              <div className="card-content">
-                {image.alt_description}
-              </div>
-            </div>
-          ))
-        }
+        {images.map((image) => (
+          <div key={image.id} className='card'>
+            <img src={image.urls.regular} className='card-img' alt='' />
+            <div className='card-content'>{image.alt_description}</div>
+          </div>
+        ))}
       </div>
     </div>
   );
